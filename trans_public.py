@@ -14,8 +14,6 @@ SOURCE_LAN = 'ja'
 DESTINATION_LAN = 'zh-cn'
 ORIGINAL_TEXT = "Original (Japanese):"
 DESTINATION_TEXT = "Translated (Chinese):"
-APP_KEY = '5cc81ccc3cbf4d8b'
-SECRET_KEY = 'za8BOL2O9FHpIjHrBpvi3rScUnPo7ebL'
 API = "https://openapi.youdao.com/api"
 
 

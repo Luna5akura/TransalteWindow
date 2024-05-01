@@ -1,5 +1,6 @@
 import customtkinter as ctk
 import pyttsx3
+import threading
 import pyperclip
 import requests
 import hashlib
@@ -72,6 +73,7 @@ def translate_text(text, src=SOURCE_LAN, dest=DESTINATION_LAN):
 
 class ClipboardTranslator:
     def __init__(self):
+        self.is_speaking = False
         self.read_button = None
         self.history_slider = None
         self.text_area_original = None
@@ -131,17 +133,25 @@ class ClipboardTranslator:
         self.read_button.grid(row=0, column=1, padx=10, pady=5, sticky='nsew')
 
     def read_original_text(self):
-        engine = pyttsx3.init()
-        voices = engine.getProperty('voices')
-        japanese_voice = voices[NTH_LANGUAGE_PACK_IN_SYSTEM]
-        # japanese_voice = next((voice for voice in voices if 'ja' in voice.languages), None)
-        if japanese_voice:
-            engine.setProperty('voice', japanese_voice.id)
-            engine.setProperty('rate', VOICE_RATE)
-            engine.setProperty('volume', VOICE_VOLUME)
-        original_text = self.text_area_original.get("1.0", "end-1c")
-        engine.say(original_text)
-        engine.runAndWait()
+        if self.is_speaking:
+            return
+
+        def speak():
+            self.is_speaking = True
+            engine = pyttsx3.init()
+            voices = engine.getProperty('voices')
+            japanese_voice = next((voice for voice in voices if 'ja' in voice.languages), None)
+            if japanese_voice:
+                engine.setProperty('voice', japanese_voice.id)
+            engine.setProperty('rate', 150)
+            engine.setProperty('volume', 0.8)
+            original_text = self.text_area_original.get("1.0", "end-1c")
+            engine.say(original_text)
+            engine.runAndWait()
+            self.is_speaking = False
+
+        thread = threading.Thread(target=speak)
+        thread.start()
 
     def on_history_scroll(self, value):
         index = int(value)

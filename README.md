@@ -1,2 +1,2 @@
 # TransalteWindow
-A small window read the clipboard and translate automately
+Read the clipboard.Translate.Show in a window

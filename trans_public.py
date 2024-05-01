@@ -172,6 +172,7 @@ class ClipboardTranslator:
             self.translation_history.pop(0)
         self.translation_history.append(entry)
         self.history_slider.configure(to=len(self.translation_history) - 1)
+        self.history_slider.configure(number_of_steps=len(self.translation_history) - 1)
 
     def check_clipboard_change(self):
         time.sleep(0.5)

@@ -140,11 +140,12 @@ class ClipboardTranslator:
             self.is_speaking = True
             engine = pyttsx3.init()
             voices = engine.getProperty('voices')
-            japanese_voice = next((voice for voice in voices if 'ja' in voice.languages), None)
+            japanese_voice = voices[NTH_LANGUAGE_PACK_IN_SYSTEM]
+            # japanese_voice = next((voice for voice in voices if 'ja' in voice.languages), None)
             if japanese_voice:
                 engine.setProperty('voice', japanese_voice.id)
-            engine.setProperty('rate', 150)
-            engine.setProperty('volume', 0.8)
+                engine.setProperty('rate', VOICE_RATE)
+                engine.setProperty('volume', VOICE_VOLUME)
             original_text = self.text_area_original.get("1.0", "end-1c")
             engine.say(original_text)
             engine.runAndWait()
@@ -168,9 +169,9 @@ class ClipboardTranslator:
     def update_history_list(self, original_text, translated_text):
         entry = f"{original_text} -> {translated_text}"
         if len(self.translation_history) >= 10:
-            self.translation_history.pop(0)  # Remove the oldest entry
+            self.translation_history.pop(0)
         self.translation_history.append(entry)
-        self.history_slider.configure(to=len(self.translation_history) - 1)  # Update the slider's range
+        self.history_slider.configure(to=len(self.translation_history) - 1)
 
     def check_clipboard_change(self):
         time.sleep(0.5)
@@ -180,6 +181,7 @@ class ClipboardTranslator:
                 self.current_clipboard_content = clipboard_content
                 translated_text = translate_text(clipboard_content)
                 self.update_text_areas(clipboard_content, translated_text)
+                self.update_history_list(clipboard_content, translated_text)
 
     def update_clipboard_content(self):
         self.check_clipboard_change()

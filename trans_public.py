@@ -101,11 +101,11 @@ class ClipboardTranslator:
         original_frame = ctk.CTkFrame(self.root)
         original_frame.grid(row=1, column=0, sticky='nsew')
         original_frame.grid_columnconfigure(0, weight=1)
-        self.text_area_original = ctk.CTkTextbox(original_frame, wrap='word', font=(JAPANESE_FONT, 30), height=5)
+        self.text_area_original = ctk.CTkTextbox(original_frame, wrap='word', font=(JAPANESE_FONT, 30), height=300)
         self.text_area_original.grid(row=0, column=0, padx=10, pady=5, sticky='nsew')
-        scrollbar_original = ctk.CTkScrollbar(original_frame, command=self.text_area_original.yview)
-        scrollbar_original.grid(row=0, column=1)
-        self.text_area_original.configure(yscrollcommand=scrollbar_original.set)
+        # scrollbar_original = ctk.CTkScrollbar(original_frame, command=self.text_area_original.yview)
+        # scrollbar_original.grid(row=0, column=1)
+        # self.text_area_original.configure(yscrollcommand=scrollbar_original.set)
 
         label_translated = ctk.CTkLabel(self.root, text=DESTINATION_TEXT, font=(PAGEFONT, 15), corner_radius=15)
         label_translated.grid(row=2, column=0, sticky='nsew')
@@ -113,11 +113,11 @@ class ClipboardTranslator:
         translated_frame = ctk.CTkFrame(self.root)
         translated_frame.grid(row=3, column=0, sticky='nsew')
         translated_frame.grid_columnconfigure(0, weight=1)
-        self.text_area_translated = ctk.CTkTextbox(translated_frame, wrap='word', font=(CHINESE_FONT, 30), height=5)
+        self.text_area_translated = ctk.CTkTextbox(translated_frame, wrap='word', font=(CHINESE_FONT, 30), height=300)
         self.text_area_translated.grid(row=0, column=0, padx=10, pady=5, sticky='nsew')
-        scrollbar_translated = ctk.CTkScrollbar(translated_frame, command=self.text_area_translated.yview)
-        scrollbar_translated.grid(row=0, column=1)
-        self.text_area_translated.configure(yscrollcommand=scrollbar_translated.set)
+        # scrollbar_translated = ctk.CTkScrollbar(translated_frame, command=self.text_area_translated.yview)
+        # scrollbar_translated.grid(row=0, column=1)
+        # self.text_area_translated.configure(yscrollcommand=scrollbar_translated.set)
 
         control_frame = ctk.CTkFrame(self.root)
         control_frame.grid(row=4, column=0, sticky='nsew')
@@ -175,7 +175,7 @@ class ClipboardTranslator:
         self.history_slider.configure(number_of_steps=len(self.translation_history) - 1)
 
     def check_clipboard_change(self):
-        time.sleep(0.5)
+        time.sleep(1)
         clipboard_content = pyperclip.paste()
         if isinstance(clipboard_content, str) and clipboard_content != self.current_clipboard_content:
             if is_japanese_text(clipboard_content):

@@ -43,6 +43,18 @@ def is_japanese_text(text):
         return False
 
 
+def try_access_clipboard(max_attempts=5, wait_interval=1):
+    for attempt in range(max_attempts):
+        try:
+            clipboard_content = pyperclip.paste()
+            return clipboard_content
+        except pyperclip.PyperclipWindowsException:
+            print(f"Attempt {attempt + 1} failed, retrying in {wait_interval} seconds...")
+            time.sleep(wait_interval)
+    print("Failed to access clipboard after maximum attempts.")
+    return None
+
+
 def translate_text(text, src=SOURCE_LAN, dest=DESTINATION_LAN):
     appKey = APP_KEY
     secretKey = SECRET_KEY
@@ -175,14 +187,16 @@ class ClipboardTranslator:
         self.history_slider.configure(number_of_steps=len(self.translation_history) - 1)
 
     def check_clipboard_change(self):
-        time.sleep(1)
-        clipboard_content = pyperclip.paste()
-        if isinstance(clipboard_content, str) and clipboard_content != self.current_clipboard_content:
+        clipboard_content = try_access_clipboard()
+        if clipboard_content is not None and isinstance(clipboard_content,
+                                                        str) and clipboard_content != self.current_clipboard_content:
             if is_japanese_text(clipboard_content):
                 self.current_clipboard_content = clipboard_content
                 translated_text = translate_text(clipboard_content)
                 self.update_text_areas(clipboard_content, translated_text)
                 self.update_history_list(clipboard_content, translated_text)
+        else:
+            print("No new clipboard content or failed to access clipboard.")
 
     def update_clipboard_content(self):
         self.check_clipboard_change()
